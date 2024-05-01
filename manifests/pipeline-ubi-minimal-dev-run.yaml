@@ -1,0 +1,18 @@
+    apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: nginx-ubi-min-dev-pipeline-
+      
+      labels:
+        tekton.dev/pipeline: nginx-ubi-min-dev-pipeline
+    spec:
+      pipelineRef:
+        name: nginx-ubi-min-dev-pipeline
+
+      workspaces:
+      - name: dockerfile
+        configMap:
+          name: build-dockerfile
+      - name: workspace
+        persistentVolumeClaim:
+          claimName: nginx-ubi-min-build-workspace

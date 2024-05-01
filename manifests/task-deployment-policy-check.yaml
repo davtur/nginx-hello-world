@@ -1,0 +1,54 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+
+  name: rox-deployment-policy-check
+  namespace: nginx
+spec:
+  params:
+    - name: GIT_REPOSITORY
+      type: string
+    - description: 'Secret containing the address:port tuple for StackRox Central (example - rox.stackrox.io:443)'
+      name: rox_central_endpoint
+      type: string
+    - description: Secret containing the StackRox API token with CI permissions
+      name: rox_api_token
+      type: string
+    - description: YAML file in the deployfiles workspace
+      name: file
+      type: string
+    - description: Path/Folder for the k8s deployment files to check
+      name: deployment_files_path
+      type: string
+  results:
+    - description: Output of `roxctl deployment check`
+      name: check_output
+      type: string
+  steps:
+
+    - env:
+        - name: ROX_API_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: rox_api_token
+              name: $(params.rox_api_token)
+        - name: ROX_CENTRAL_ENDPOINT
+          valueFrom:
+            secretKeyRef:
+              key: rox_central_endpoint
+              name: $(params.rox_central_endpoint)
+      image: 'registry.access.redhat.com/ubi8/ubi-minimal:latest'
+      name: rox-deployment-check
+      resources: {}
+      script: |
+        #!/usr/bin/env bash
+        set +x
+        cd git-update-digest-workdir/$(params.deployment_files_path)
+        cat $(params.file)
+        curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null; echo "Getting roxctl"
+        chmod +x ./roxctl  > /dev/null
+        ./roxctl deployment check --insecure-skip-tls-verify -e $ROX_CENTRAL_ENDPOINT -f $(params.file)
+      workingDir: $(workspaces.workspace.path)
+  workspaces:
+    - description: The workspace consisting of maven project.
+      name: workspace

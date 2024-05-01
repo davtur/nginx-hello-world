@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alpha.image.policy.openshift.io/resolve-names: '*'
+    app.openshift.io/route-disabled: "false"
+    app.openshift.io/vcs-ref: ""
+    app.openshift.io/vcs-uri: git@github.com:davtur/kube-nginx.git
+    deployment.kubernetes.io/revision: "22"
+    image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"app:latest","namespace":"nginx"},"fieldPath":"spec.template.spec.containers[?(@.name==\"app\")].image","pause":"false"}]'
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: app
+    app.kubernetes.io/component: app
+    app.kubernetes.io/instance: app
+    app.kubernetes.io/name: app
+    app.kubernetes.io/part-of: nginx
+    app.openshift.io/runtime: java
+
+  name: app
+  namespace: nginx
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: app
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app
+        deployment: app
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - image: image-registry.openshift-image-registry.svc:5000/nginx/app@sha256:e4a615c29464a163a4eabb47c8cfe0938b78ff339781d41de60cb3bc22cd556d
+        imagePullPolicy: Always
+        name: app
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        - containerPort: 8443
+          protocol: TCP
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "20Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 15
+          timeoutSeconds: 2
+          periodSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          timeoutSeconds: 2
+          periodSeconds: 5
+          successThreshold: 1
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30

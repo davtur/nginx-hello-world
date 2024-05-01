@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: build-dockerfile
+  namespace: nginx
+data:
+  Dockerfile: |
+
+      FROM image-registry.openshift-image-registry.svc:5000/openshift/nginx:latest
+
+
+
+      RUN pwd
+       RUN ls -laR ./
+      WORKDIR /workspace/source/nginx
+      RUN pwd
+      RUN ls -laR ./
+
+      COPY --chown=1001 nginx.conf /etc/nginx/conf.d/default.conf
+      COPY --chown=1001 index.html /usr/share/nginx/html
+      COPY --chown=1001 health /usr/share/nginx/html
+
+      USER 1001
+      EXPOSE 8080:8080
+      CMD ["nginx", "-g", "daemon off;"]
