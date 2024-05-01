@@ -1,5 +1,5 @@
 # nginx-hello-world
-THis is a simple nginx example with an Openshift ( Tekton) pipeline with integration into Advanced Cluster Security for image scans and security policy checks.
+This is a simple nginx example with an Openshift ( Tekton) pipeline with integration into Advanced Cluster Security for image scans and security policy checks.
 
 See the ACS documentation here https://docs.openshift.com/acs/4.4/welcome/index.html
 
@@ -38,7 +38,7 @@ oc import-image ubi9-minimal:latest --scheduled=true --from=registry.access.redh
 
 # nginx conf
 
-Note: The root is set to /usr/share/nginx/html in teh dockerfile so make sure your nginx.conf uses the below root:
+Note: The root is set to /usr/share/nginx/html in the dockerfile so make sure your nginx.conf uses the below root:
 
 ```
  root /usr/share/nginx/html;
