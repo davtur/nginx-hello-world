@@ -18,7 +18,7 @@ spec:
       description: The application git revision
       name: APP_MANIFESTS_REVISION
       type: string
-    - default: 'ghttps://github.com/davtur/nginx-hello-world.git'
+    - default: 'https://github.com/davtur/nginx-hello-world.git'
       description: The application manifests git repository
       name: APP_MANIFESTS_GIT
       type: string

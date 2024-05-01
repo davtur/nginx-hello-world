@@ -43,7 +43,7 @@ spec:
       script: |
         #!/usr/bin/env bash
         set +x
-        cd git-update-digest-workdir/$(params.deployment_files_path)
+        cd $(params.deployment_files_path)
         cat $(params.file)
         curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null; echo "Getting roxctl"
         chmod +x ./roxctl  > /dev/null
