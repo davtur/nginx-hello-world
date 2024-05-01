@@ -44,6 +44,7 @@ spec:
         #!/usr/bin/env bash
         set +x
         cd $(params.deployment_files_path)
+        #ls -alR
         cat $(params.file)
         curl -k -L -H "Authorization: Bearer $ROX_API_TOKEN" https://$ROX_CENTRAL_ENDPOINT/api/cli/download/roxctl-linux --output ./roxctl  > /dev/null; echo "Getting roxctl"
         chmod +x ./roxctl  > /dev/null

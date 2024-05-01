@@ -151,7 +151,7 @@ spec:
         - name: file
           value: deployment.yaml
         - name: deployment_files_path
-          value: /workspace/workspace/ource/mginx/manifests
+          value: nginx/manifests
       runAfter:
         - manifests-source-clone
       taskRef:
