@@ -6,7 +6,7 @@ metadata:
 data:
   Dockerfile: |
 
-      # Use Red Hat Universal Base Image 9 Micro
+      # Use Red Hat Universal Base Image 9 Minimal
       #FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
       FROM image-registry.openshift-image-registry.svc:5000/openshift/ubi9-minimal:latest
       # Install necessary packages
