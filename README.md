@@ -1,6 +1,18 @@
 # nginx-hello-world
 THis is a simple nginx example with an Openshift ( Tekton) pipeline with integration into Advanced Cluster Security for image scans and security policy checks.
 
+See the ACS documentation here https://docs.openshift.com/acs/4.4/welcome/index.html
+
+This link will show you how to generate the API token for access to the roxcli scanning tool. You need to update the roxsecrets secret in the manifests folder with the api token and api url for your openshift cluster that has the advanced cluster security operator deployed.
+https://docs.openshift.com/acs/4.4/cli/using-the-roxctl-cli.html#create-api-token_using-roxctl-cli
+
+Note: if you update the rox-secret.yaml directly you will need to base64 encode the api token and url like this:
+
+```
+echo '<My Token>' | base64 
+```
+
+Otherwise just edit it via teh secret in the Console under workloads->Secrets.
 
 # import a mimnimal ubi image to openshift and store it in the local registry
 
